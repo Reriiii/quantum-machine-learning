@@ -120,3 +120,63 @@ $$P(x)=|\langle x|\psi\rangle|^2, \quad \sum_{i}P(x_i)=1$$
 > * On the Bloch Sphere, angles are *twice* as large as they are in Hilbert space.
 > * Example: $|0\rangle$ and $|1\rangle$ are orthogonal in Hilbert space ($90^\circ$), but on the Bloch sphere, they are opposite ($180^\circ$).
 > * $\theta$ is the angle on the Bloch sphere, while $\frac{\theta}{2}$ is the parameter in the state vector.
+
+## 2. Quantum Circuits
+
+- **Circuit model**: Sequence of building blocks that carry out elementary computations called *gates*.
+
+### 2.1. Single qubit gates
+
+- Classical example: NOT gate
+
+<figure>
+  <img src="./img/Not-gate.svg" alt="Classical NOT gate" width="300">
+  <figcaption align="center">Fig 2. Classical NOT gate</figcaption>
+</figure>
+
+- Quantum examples: As quantum theory is *unitary*, quantum gates are represented by *unitary matrices*: $U^\dagger U=I$.
+  - $\sigma_X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} = |0\rangle\langle1| + |1\rangle\langle0|$ \
+    $\implies \sigma_X|0\rangle = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}\begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ 1 \end{pmatrix} = |1\rangle$ \
+    $\implies \sigma_X|1\rangle = (|0\rangle\langle1| + |1\rangle\langle0|).|1\rangle = |0\rangle \underbrace{\langle1|1\rangle}_{1} + |1\rangle \underbrace{\langle0|1\rangle}_{0}=|0\rangle$
+
+      $\implies$ **Bit Flip** $\hat{=}$ NOT-gate
+  
+  - $\sigma_Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} = |0\rangle\langle0| - |1\rangle\langle1|$ \
+    $\implies \sigma_Y|+\rangle = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ -1 \end{pmatrix} = |-\rangle$ \
+    $\implies \sigma_Y|+\rangle =|-\rangle$\
+    $\implies$ **Phase Flip**: Rotation around Z-axis by $\pi$.
+
+  - $\sigma_Y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix} = i\sigma_X\sigma_Z \implies$ **Bit & Phase Flip**.
+  - $\sigma_X, \sigma_Y, \sigma_Z$ are the so-called *Pauli matrices* and $\sigma_i^2 = I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$.
+  - Together with identity $I$ they form a basis of 2x2 matrices.
+  
+- **Hadamard Gate**: One of the most important gates for quantum circuits.
+  
+  $H= \frac{1}{\sqrt{2}} \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix} = \frac{1}{\sqrt{2}} \left( |0\rangle\langle0| + |0\rangle\langle1| + |1\rangle\langle0| - |1\rangle\langle1| \right)$
+
+  $\implies H|0\rangle = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = |+\rangle$
+
+  $\implies H|1\rangle = \frac{1}{\sqrt{2}} \left( |0\rangle\langle0| + |0\rangle\langle1| + |1\rangle\langle0| - |1\rangle\langle1| \right)|1\rangle = \frac{1}{\sqrt{2}} (|0\rangle - |1\rangle) = |-\rangle$
+
+  $\implies$ Creates superposition! Also $H|+\rangle=|0\rangle, \ H|-\rangle=|1\rangle$
+
+  Use to change between X and Z basis.
+
+- Similarly, as $S=\begin{pmatrix} 1 & 0 \\ 0 & i \end{pmatrix}$ adds $90^\circ$ to the phase $\varphi$:
+  - $S|+\rangle = |+i\rangle$
+  - $S|-\rangle = |-i\rangle$
+  - $SH$ is applied to change from $Z$ to $Y$ basis.
+
+### 2.2. Multipart Quantum States
+
+- We use *tensor products* to describe miltiple states:
+  
+  $|a\rangle \otimes |b\rangle = \begin{pmatrix} a_1 \\ a_2 \end{pmatrix} \otimes \begin{pmatrix} b_1 \\ b_2 \end{pmatrix} = \begin{pmatrix} a_1b_1 \\ a_1b_2 \\ a_2b_1 \\ a_2b_2 \end{pmatrix}$ 
+
+  Example: System A is in state $|1\rangle_A$ and system B is in statee $|0\rangle_B$\
+  $\implies$ The total (bipartile) state is $|10\rangle_{AB}:=|1\rangle_A \otimes |0\rangle_B = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \otimes \begin{pmatrix} 1 \\ 0 \end{pmatrix} =  \begin{pmatrix} 0 \\ 0 \\ 1 \\ 0 \end{pmatrix}$
+  
+- Remark: States of this form are called **uncorrelated**, but there are also bipartile states that cannot be written as $|\psi\rangle_A \otimes |\varphi\rangle_B$. These states are *correlated* and sometimes even *entangled*. \
+e.g. $|\Phi^+\rangle = \frac{1}{\sqrt{2}} (|00\rangle_{AB} + |11\rangle_{AB}) = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ 0 \\ 0 \\ 1 \end{pmatrix}$
+
+### 2.3. Two-qubit Gates
